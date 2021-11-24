@@ -6,8 +6,6 @@ import docs from "../docs"
 
 const router = express.Router()
 
-console.log(JSON.stringify(docs))
-
 router.use("/docs", swaggerUi.serve)
 router.get("/docs", swaggerUi.setup(docs))
 router.use("/users", userRouter)

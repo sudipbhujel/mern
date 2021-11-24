@@ -3,16 +3,23 @@ services:
   db:
     image: mongo
     restart: always
+    container_name: mongo
     volumes:
-      - app-db-data:/data/db
+      - db-data:/data/db
+      - ./mongo-entrypoint.sh:/docker-entrypoint-initdb.d/mongo-entrypoint.sh:ro
     env_file:
       - .env
+    command: mongod
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: app
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: example
 
   mongo-express:
     image: mongo-express
+    container_name: mongo-express
     restart: always
     ports:
       - 8081:8081
@@ -29,6 +36,7 @@ services:
 
   backend:
     image: backend
+    container_name: mern_backend
     depends_on:
       - db
     ports:
@@ -40,4 +48,4 @@ services:
       - ./backend:/app
 
 volumes:
-  app-db-data:
+  db-data:

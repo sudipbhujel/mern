@@ -6,8 +6,8 @@
   "scripts": {
     "clean": "del ./dist/*",
     "format": "prettier --config .prettierrc.json --write 'src/**/*.{ts,js,json,md,yml}'",
-    "dev": "ts-node-dev src/index.ts",
-    "build": "npm run clean && tsc -p .",
+    "dev": "NODE_ENV=development ts-node-dev src/index.ts",
+    "build": "NODE_ENV=production npm run clean && tsc -p .",
     "start": "node dist/index.js"
   },
   "keywords": [],

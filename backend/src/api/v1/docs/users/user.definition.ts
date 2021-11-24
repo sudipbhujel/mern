@@ -1,38 +1,49 @@
 export default {
-  // todo model
-  Todo: {
-    type: "object", // data type
+  // user model
+  User: {
+    type: "object",
     properties: {
       id: {
-        type: "string", // data-type
-        description: "Todo identification number", // desc
-        example: "ytyVgh", // example of an id
+        type: "string",
+        description: "User identification number",
+        example: "ytyVgh",
       },
-      title: {
-        type: "string", // data-type
-        description: "Todo's title", // desc
-        example: "Coding in JavaScript", // example of a title
+      name: {
+        type: "string",
+        description: "User's name",
+        example: "John Doe",
       },
-      completed: {
-        type: "boolean", // data type
-        description: "The status of the todo", // desc
-        example: false, // example of a completed value
+      email: {
+        type: "string",
+        description: "User's email",
+        example: "john@example.com",
+      },
+      avatar: {
+        type: "string",
+        description: "User's avatar",
+        example: "https://avatars.dicebear.com/api/human/john.doe.svg",
       },
     },
   },
-  // Todo input model
-  TodoInput: {
-    type: "object", // data type
+  // User input model
+  UserInput: {
+    type: "object",
     properties: {
-      title: {
-        type: "string", // data type
-        description: "Todo's title", // desc
-        example: "Coding in JavaScript", // example of a title
+      name: {
+        type: "string",
+        description: "User's name",
+        example: "John Doe",
       },
-      completed: {
-        type: "boolean", // data type
-        description: "The status of the todo", // desc
-        example: false, // example of a completed value
+      email: {
+        type: "string",
+        description: "User's email",
+        example: "john@example.com",
+      },
+      avatar: {
+        type: "string",
+        optional: true,
+        description: "User's avatar",
+        example: "https://avatars.dicebear.com/api/human/john.doe.svg",
       },
     },
   },

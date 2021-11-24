@@ -1,0 +1,81 @@
+version: "3.3"
+services:
+  db:
+    image: mongo
+    container_name: mongo
+    volumes:
+      - db-data:/data/db
+      - ./mongo-entrypoint.sh:/docker-entrypoint-initdb.d/mongo-entrypoint.sh:ro
+    networks:
+      - net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: app
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: example
+    deploy:
+      placement:
+        constraints:
+          - node.labels.mongo.db-data==true
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    networks:
+      - net
+      - traefik-public
+    depends_on:
+      - db
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.mongo-http.rule=Host(`mongo.sudipbhujel.ga`)
+        - traefik.http.routers.mongo-http.entrypoints=http
+        - traefik.http.routers.mongo-http.middlewares=https-redirect
+        - traefik.http.routers.mongo-https.rule=Host(`mongo.sudipbhujel.ga`)
+        - traefik.http.routers.mongo-https.entrypoints=https
+        - traefik.http.routers.mongo-https.tls=true
+        - traefik.http.routers.mongo-https.tls.certresolver=le
+        - traefik.http.services.mongo.loadbalancer.server.port=8081
+  backend: 
+    image: sudipbhujel/backend
+    container_name: mern-backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - net
+      - traefik-public
+    depends_on:
+      - db
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.backend-http.rule=Host(`api.sudipbhujel.ga`)
+        - traefik.http.routers.backend-http.entrypoints=http
+        - traefik.http.routers.backend-http.middlewares=https-redirect
+        - traefik.http.routers.backend-https.rule=Host(`api.sudipbhujel.ga`)
+        - traefik.http.routers.backend-https.entrypoints=https
+        - traefik.http.routers.backend-https.tls=true
+        - traefik.http.routers.backend-https.tls.certresolver=le
+        - traefik.http.services.backend.loadbalancer.server.port=4000
+    
+networks:
+  net:
+    driver: overlay
+    attachable: true
+  traefik-public:
+    external: true
+
+volumes:
+  db-data:

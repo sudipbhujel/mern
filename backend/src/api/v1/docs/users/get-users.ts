@@ -14,7 +14,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              $ref: "#/definitions/Todo", // User model
+              $ref: "#/definitions/User", // User model
             },
           },
         },

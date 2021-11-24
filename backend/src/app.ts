@@ -1,4 +1,5 @@
 import express, { Request, Response, Application } from "express"
+import { json } from "body-parser"
 import morgan from "morgan"
 import helmet from "helmet"
 import cors from "cors"
@@ -12,6 +13,7 @@ const app: Application = express()
 // Cors Options
 const corsOptions = {
   origin: function (origin: any, callback: any) {
+    console.log(origin)
     if (!origin || config.whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
@@ -27,6 +29,7 @@ const limiter = rateLimit({
 })
 
 // Middleware
+app.use(json({ limit: "50mb" }))
 app.use(morgan("dev"))
 app.use(helmet())
 app.use(cors(corsOptions))

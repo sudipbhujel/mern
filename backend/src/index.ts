@@ -14,7 +14,7 @@ const start = async () => {
   try {
     // connect mongoose
     console.log("Connecting to mongoose...")
-    await mongoose.connect("mongodb://root:example@db:27017/", {
+    await mongoose.connect("mongodb://admin:example@db:27017/app", {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
     })
